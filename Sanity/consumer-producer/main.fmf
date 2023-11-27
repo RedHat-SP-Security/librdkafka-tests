@@ -12,6 +12,8 @@ require:
 - make
 - java-1.8.0-openjdk
 enabled: true
+tag:
+- rhel-buildroot
 adjust:
 -   enabled: false
     when: distro < rhel-8.10
