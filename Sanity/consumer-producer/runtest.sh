@@ -86,7 +86,8 @@ rlJournalStart && {
   tcfTry "Tests" --no-assert && {
     rlPhaseStartTest && {
       rlRun "./kafka-prog consumer 127.0.0.1:9092 TestGroupID TestTopic > /tmp/kafka-consumer.log 2>&1 &"
-      CleanupRegister "rlRun 'kill -SIGINT $!' 0 'kill kafka consumer'"
+      consumerPID=$!
+      CleanupRegister "rlRun 'kill -SIGINT $consumerPID' 0-1 'kill kafka consumer'"
       CleanupRegister "rlRun 'rm -f /tmp/kafka-consumer.log' "
       sleep 3
 
@@ -97,9 +98,12 @@ rlJournalStart && {
       rlRun "cat /tmp/kafka-producer-input.log"
 
       rlRun "./kafka-prog producer 127.0.0.1:9092 TestTopic < /tmp/kafka-producer-input.log > /tmp/kafka-producer.log 2>&1 &"
-      CleanupRegister "rlRun 'kill -SIGINT $!' 0-1 'kill kafka producer'"
+      producerPID=$!
+      CleanupRegister "rlRun 'kill -SIGINT $producerPID' 0-1 'kill kafka producer'"
       CleanupRegister "rlRun 'rm -f /tmp/kafka-producer.log /tmp/kafka-producer-input.log' "
       sleep 10
+      rlRun "kill -SIGINT $producerPID $consumerPID"
+      sleep 5
 
       rlRun "cat /tmp/kafka-consumer.log"
       rlRun "cat /tmp/kafka-producer.log"
