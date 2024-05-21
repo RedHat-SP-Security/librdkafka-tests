@@ -56,9 +56,9 @@ rlJournalStart && {
     rlRun "rlFileBackup --clean /tmp/kafka-logs /tmp/zookeeper"
     rlRun "rm -rf /tmp/kafka-logs /tmp/zookeeper"
 
-    rlRun "rlDownload kafka_2.11-2.1.0.tgz https://archive.apache.org/dist/kafka/2.1.0/kafka_2.11-2.1.0.tgz"
-    rlRun "tar -xzf kafka_2.11-2.1.0.tgz"
-    rlRun "cd kafka_2.11-2.1.0"
+    rlRun "wget https://archive.apache.org/dist/kafka/3.7.0/kafka_2.13-3.7.0.tgz"
+    rlRun "tar -xzf kafka_2.13-3.7.0.tgz"
+    rlRun "cd kafka_2.13-3.7.0"
     rlRun "bin/zookeeper-server-start.sh config/zookeeper.properties &"
     CleanupRegister "rlRun 'kill $!' 0 'kill zookeeper server'; rlWaitForSocket --close 2181"
     rlWaitForSocket 2181
@@ -71,8 +71,8 @@ rlJournalStart && {
     rlWaitForSocket 9092
     rlRun "sleep 10"
 
-    rlRun "bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic TestTopic" 0-255
-    rlRun "bin/kafka-topics.sh --list --zookeeper localhost:2181"
+    rlRun "bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic TestTopic" 0-255
+    rlRun "bin/kafka-topics.sh --list --bootstrap-server localhost:9092"
     CleanupRegister "rlRun 'make clean'"
     rlRun "cp ../Makefile ../kafka-prog.c ."
     rlRun "make"

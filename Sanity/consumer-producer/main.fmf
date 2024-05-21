@@ -10,17 +10,14 @@ require:
 - librdkafka-devel
 - gcc
 - make
-- java-1.8.0-openjdk
+- java
+- wget
 enabled: true
 tag:
 - rhel-buildroot
 adjust:
 -   enabled: false
     when: distro < rhel-8.10
--   enabled: false
-    when: distro >= rhel-10
-    because: package missing for rhel-10.0, resolve later
-#    continue: false
 # -   enabled: false
 #     when: arch == s390x
 #     continue: false
