@@ -32,7 +32,8 @@ PACKAGE="librdkafka"
 
 rlJournalStart && {
     rlPhaseStartSetup
-        rlRun "rlCheckMakefileRequires" || rlDie "cannot continue"
+        rlRun "dnf config-manager --set-enable epel" 0 "Enable EPEL"
+        rlRun "dnf install -y rpmlint" 0 "Install rpmlint"
         rlRun "rlImport --all" 0 "Import libraries" || rlDie "cannot continue"
         rlRun "TmpDir=\$(mktemp -d)" 0 "Creating tmp directory"
         CleanupRegister "rlRun 'rm -r $TmpDir' 0 'Removing tmp directory'"
