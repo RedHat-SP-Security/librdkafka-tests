@@ -3,7 +3,6 @@ contact: Dalibor Pospisil <dapospis@redhat.com>
 test: ./runtest.sh
 require+:
 - library(ControlFlow/Cleanup)
-- epel-release
 duration: 5m
 enabled: true
 tag:

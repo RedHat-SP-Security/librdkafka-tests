@@ -32,6 +32,7 @@ PACKAGE="librdkafka"
 
 rlJournalStart && {
     rlPhaseStartSetup
+        rlRun "dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm" 0 "Install EPEL"
         rlRun "dnf config-manager --set-enable epel" 0 "Enable EPEL"
         rlRun "dnf install -y rpmlint" 0 "Install rpmlint"
         rlRun "rlImport --all" 0 "Import libraries" || rlDie "cannot continue"
