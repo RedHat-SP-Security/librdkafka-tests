@@ -32,9 +32,14 @@ PACKAGE="librdkafka"
 
 rlJournalStart && {
     rlPhaseStartSetup
-        rlRun "dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm" 0 "Install EPEL"
+        if rlIsRHELLike '>=10'; then
+            rlRun "dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm" 0 "Install EPEL"
+        else
+            rlRun "dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm" 0 "Install EPEL"
+        fi
         rlRun "dnf config-manager --set-enable epel" 0 "Enable EPEL"
         rlRun "dnf install -y rpmlint" 0 "Install rpmlint"
+        rlRun "dnf config-manager --set-disable epel" 0 "Disable EPEL"
         rlRun "rlImport --all" 0 "Import libraries" || rlDie "cannot continue"
         rlRun "TmpDir=\$(mktemp -d)" 0 "Creating tmp directory"
         CleanupRegister "rlRun 'rm -r $TmpDir' 0 'Removing tmp directory'"
