@@ -32,8 +32,10 @@ PACKAGE="librdkafka"
 
 rlJournalStart && {
     rlPhaseStartSetup
-        rlRun "echo "$TMT_CONTEXT" | grep -q 'deploymentmode=image'" 0 "Check deployment mode"
-        if ! echo "$TMT_CONTEXT" | grep -q 'deploymentmode=image'; then
+        if [ -f /run/ostree-booted ]; then
+            rlLog "Image mode detected (ostree booted), skipping EPEL installation"
+        else
+            rlLog "Package mode detected (classic boot), installing EPEL"
             if rlIsRHELLike '>=10'; then
                 rlRun "dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm" 0 "Install EPEL"
             else
@@ -43,11 +45,12 @@ rlJournalStart && {
             rlRun "dnf install -y rpmlint" 0 "Install rpmlint"
             rlRun "dnf config-manager --set-disable epel" 0 "Disable EPEL"
         fi
+
         rlRun "rlImport --all" 0 "Import libraries" || rlDie "cannot continue"
         rlRun "TmpDir=\$(mktemp -d)" 0 "Creating tmp directory"
-        CleanupRegister "rlRun 'rm -r $TmpDir' 0 'Removing tmp directory'"
+        CleanupRegister "rlRun 'rm -r \$TmpDir' 0 'Removing tmp directory'"
         CleanupRegister 'rlRun "popd"'
-        rlRun "pushd $TmpDir"
+        rlRun "pushd \$TmpDir"
     rlPhaseEnd
 
 
