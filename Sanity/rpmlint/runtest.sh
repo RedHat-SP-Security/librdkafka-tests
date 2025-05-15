@@ -32,6 +32,7 @@ PACKAGE="librdkafka"
 
 rlJournalStart && {
     rlPhaseStartSetup
+        rlRun "echo "$TMT_CONTEXT" | grep -q 'deploymentmode=image'" 0 "Check deployment mode"
         if ! echo "$TMT_CONTEXT" | grep -q 'deploymentmode=image'; then
             if rlIsRHELLike '>=10'; then
                 rlRun "dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm" 0 "Install EPEL"
