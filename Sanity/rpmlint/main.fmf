@@ -1,4 +1,7 @@
 summary: rpmlint for librdkafka
+description: |
+    Verify that the librdkafka package passes rpmlint checks and complies
+    with system crypto policies for both GnuTLS and OpenSSL.
 contact: Dalibor Pospisil <dapospis@redhat.com>
 test: ./runtest.sh
 require+:
